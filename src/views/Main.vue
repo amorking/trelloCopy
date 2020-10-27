@@ -9,13 +9,10 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
-
 export default {
   name: 'Main',
   components: {
     ListBox: () => import('@/components/main/ListBox.vue'),
-    ...mapState(['list']),
   },
 };
 </script>

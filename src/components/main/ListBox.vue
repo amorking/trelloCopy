@@ -11,7 +11,9 @@
         </v-btn>
       </v-row>
       <!-- /.box-header -->
-      <div class="item-list-wrapper"></div>
+      <div class="item-list-wrapper">
+        <IssueCard :title="'this is title'"></IssueCard>
+      </div>
       <!-- /.item-list-wrapper -->
       <div class="btn-wrapper">
         <v-btn class="btn-add px-2" color="#ebecf0" depressed>
@@ -36,6 +38,9 @@
 export default {
   name: 'ListBox',
   props: ['title'],
+  components: {
+    IssueCard: () => import('@/components/main/IssueCard.vue'),
+  },
 };
 </script>
 
