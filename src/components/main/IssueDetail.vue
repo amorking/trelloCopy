@@ -5,50 +5,66 @@
     :class="{ active: isDetailShow }"
     opacity="0"
   >
-    <v-card class="issue-detail-card my-10" light color="#ebecf0">
-      <div class="issue-detail-header">
-        <v-container fluid>
-          <v-row align="start" no-gutters>
-            <v-col class="d-flex" cols="10">
-              <div class="header-title-wrapper">
-                <v-icon class="header-ico">
-                  mdi-inbox-full
-                </v-icon>
-                <div class="ml-10">
-                  <h4 class="header-title">{{ title }}</h4>
-                  <span class="header-desc">in list {{ title }}</span>
+    <div class="issue-detail-content">
+      <v-card class="issue-detail-card my-10" light color="#ebecf0">
+        <div class="issue-detail-header">
+          <v-container fluid>
+            <v-row align="start" no-gutters>
+              <v-col class="d-flex" cols="10">
+                <div class="header-title-wrapper">
+                  <v-icon class="header-ico">
+                    mdi-inbox-full
+                  </v-icon>
+                  <div class="ml-10">
+                    <h4 class="header-title">{{ currentIssue.title }}</h4>
+                    <span class="header-desc"
+                      >in list {{ currentList.title }}</span
+                    >
+                  </div>
                 </div>
-              </div>
-            </v-col>
-            <v-col class="d-flex justify-end" cols="2">
-              <v-btn icon @click="closeDetail">
-                <v-icon>
-                  mdi-close
-                </v-icon>
-              </v-btn>
-            </v-col>
-          </v-row>
-        </v-container>
-      </div>
+              </v-col>
+              <v-col class="d-flex justify-end" cols="2">
+                <v-btn icon @click="closeDetail">
+                  <v-icon>
+                    mdi-close
+                  </v-icon>
+                </v-btn>
+              </v-col>
+            </v-row>
+          </v-container>
+        </div>
 
-      <div class="issue-detail-option">
-        <v-container class="pt-0" fluid>
-          <v-row>
-            <v-col class="option-wrapper d-flex" cols="12" md="8">
-              <v-container class="pt-0">
-                <DueDate class="option"></DueDate>
-                <Description class="option"></Description>
-                <CheckList class="option"></CheckList>
-                <Activity class="option"></Activity>
-              </v-container>
-            </v-col>
-            <v-col cols="12" md="4">
-              <Actions></Actions>
-            </v-col>
-          </v-row>
-        </v-container>
-      </div>
-    </v-card>
+        <div class="issue-detail-option">
+          <v-container class="pt-0" fluid>
+            <v-row>
+              <v-col class="option-wrapper d-flex" cols="12" md="8">
+                <v-container class="pt-0">
+                  <DueDate
+                    class="option"
+                    :date="currentIssue.dueDate"
+                  ></DueDate>
+                  <Description
+                    class="option"
+                    :desc="currentIssue.description"
+                  ></Description>
+                  <CheckList
+                    class="option"
+                    :tasks="currentIssue.checklist"
+                  ></CheckList>
+                  <Activity
+                    class="option"
+                    :activities="currentIssue.activities"
+                  ></Activity>
+                </v-container>
+              </v-col>
+              <v-col cols="12" md="4">
+                <Actions></Actions>
+              </v-col>
+            </v-row>
+          </v-container>
+        </div>
+      </v-card>
+    </div>
   </v-overlay>
 </template>
 
@@ -57,7 +73,6 @@ import { mapState } from 'vuex';
 
 export default {
   name: 'IssueDetail',
-  props: ['list', 'title'],
   components: {
     DueDate: () => import('@/components/issue_detail/DueDate.vue'),
     Description: () => import('@/components/issue_detail/Description.vue'),
@@ -69,7 +84,7 @@ export default {
     return {};
   },
   computed: {
-    ...mapState(['isDetailShow']),
+    ...mapState(['isDetailShow', 'currentIssue', 'currentList']),
   },
   methods: {
     closeDetail() {
@@ -110,6 +125,18 @@ export default {
     .option:last-child {
       margin-bottom: 0;
     }
+  }
+}
+
+@media only screen and (max-width: 1264px) {
+  .issue-detail-card {
+    width: 70vw;
+  }
+}
+
+@media only screen and (max-width: 960px) {
+  .issue-detail-card {
+    width: 90vw;
   }
 }
 </style>

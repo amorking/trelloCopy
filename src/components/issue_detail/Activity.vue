@@ -16,7 +16,7 @@
         </v-btn>
       </div>
     </v-row>
-    <v-container class="activity-list-wrapper pl-10">
+    <div class="activity-list-wrapper pl-10">
       <v-row class="comment-text-field-wrapper align-center mb-4">
         <v-avatar class="mr-2"><v-img :src="profileImg"></v-img></v-avatar>
         <v-text-field
@@ -45,7 +45,7 @@
           </div>
         </div>
       </v-row>
-    </v-container>
+    </div>
   </div>
 </template>
 
@@ -54,28 +54,11 @@ import moment from 'moment';
 
 export default {
   name: 'Activity',
+  props: ['activities'],
   data() {
     return {
       profileImg:
         'https://6.vikiplatform.com/image/a11230e2d98d4a73825a4c10c8c6feb0.jpg?x=b&a=0x0&s=590x330&q=h&e=t&f=t&cb=1',
-      activities: [
-        {
-          id: 0,
-          imgSrc:
-            'https://image.bugsm.co.kr/artist/images/1000/800491/80049126.jpg',
-          name: 'nickname',
-          text: 'hi my name is nick',
-          createdAt: '2020-10-27T08:09:34.345Z',
-        },
-        {
-          id: 0,
-          imgSrc:
-            'https://image.bugsm.co.kr/artist/images/1000/800491/80049126.jpg',
-          name: 'nickname',
-          text: 'hi my name is nick',
-          createdAt: '2020-10-27T08:09:34.345Z',
-        },
-      ],
     };
   },
   methods: {

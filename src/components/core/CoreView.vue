@@ -1,12 +1,13 @@
 <template>
   <transition name="component-fade" mode="out-in" class="core-view">
-    <router-view />
+    <router-view :lists="lists" :issues="issues" />
   </transition>
 </template>
 
 <script>
 export default {
   name: 'CoreView',
+  props: ['lists', 'issues'],
 };
 </script>
 

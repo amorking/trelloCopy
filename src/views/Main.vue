@@ -2,7 +2,13 @@
   <div class="main">
     <v-container class="list-container overflow-x-auto" fluid>
       <v-row class="flex-nowrap">
-        <ListBox :title="'To do'" class="list-box-wrap"></ListBox>
+        <ListBox
+          class="list-box-wrap"
+          v-for="(list, i) in lists"
+          :list="list"
+          :issues="issues"
+          :key="i"
+        ></ListBox>
       </v-row>
     </v-container>
   </div>
@@ -11,6 +17,8 @@
 <script>
 export default {
   name: 'Main',
+  props: ['lists', 'issues'],
+  computed: {},
   components: {
     ListBox: () => import('@/components/main/ListBox.vue'),
   },

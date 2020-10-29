@@ -15,7 +15,7 @@
     </v-row>
     <v-row class="description-txt">
       <p class="ml-10">
-        하이 헬로우 안녕
+        {{ desc }}
       </p>
     </v-row>
   </div>
@@ -24,6 +24,7 @@
 <script>
 export default {
   name: 'DueDate',
+  props: ['desc'],
 };
 </script>
 

@@ -46,14 +46,10 @@
 <script>
 export default {
   name: 'CheckList',
+  props: ['tasks'],
   components: {},
   data() {
-    return {
-      tasks: [
-        { title: 'task 01', complete: false },
-        { title: 'task 02', complete: false },
-      ],
-    };
+    return {};
   },
   computed: {
     progress() {

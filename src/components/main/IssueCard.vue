@@ -1,7 +1,7 @@
 <template>
   <div class="issue-card">
     <v-card class="pa-2 mb-2" elevation="1" @click="openDetail">
-      <h4>{{ title }}</h4>
+      <h4>{{ issue.title }}</h4>
       <div class="icons-wrapper"></div>
     </v-card>
   </div>
@@ -10,12 +10,14 @@
 <script>
 export default {
   name: 'IssueCard',
-  props: ['title'],
+  props: ['list', 'issue'],
   data() {
     return {};
   },
   methods: {
     openDetail() {
+      this.$store.commit('setCurrentList', this.list);
+      this.$store.commit('setCurrentIssue', this.issue);
       this.$store.commit('toggleIsDetailShow');
     },
   },

@@ -1,8 +1,8 @@
 <template>
   <div class="home">
     <AppBar></AppBar>
-    <CoreView></CoreView>
-    <IssueDetail :title="'To do'" :list="list"></IssueDetail>
+    <CoreView :lists="lists" :issues="issues"></CoreView>
+    <IssueDetail :lists="lists" :issues="issues"></IssueDetail>
   </div>
 </template>
 
@@ -12,7 +12,7 @@ import { mapState } from 'vuex';
 export default {
   name: 'Home',
   computed: {
-    ...mapState(['list']),
+    ...mapState(['lists', 'issues']),
   },
   components: {
     AppBar: () => import('@/components/core/AppBar.vue'),

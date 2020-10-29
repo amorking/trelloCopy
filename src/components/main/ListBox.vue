@@ -2,7 +2,7 @@
   <v-col cols="12" md="6" lg="3">
     <v-card class="list-box pt-2 px-2 pb-2" color="#ebecf0">
       <v-row class="box-header pl-2" align="center" no-gutters>
-        <h4>{{ title }}</h4>
+        <h4>{{ list.title }}</h4>
         <v-spacer></v-spacer>
         <v-btn icon>
           <v-icon>
@@ -12,7 +12,12 @@
       </v-row>
       <!-- /.box-header -->
       <div class="item-list-wrapper">
-        <IssueCard :title="'this is title'"></IssueCard>
+        <IssueCard
+          v-for="(issue, i) in filteredIssues"
+          :key="i"
+          :list="list"
+          :issue="issue"
+        ></IssueCard>
       </div>
       <!-- /.item-list-wrapper -->
       <div class="btn-wrapper">
@@ -37,7 +42,12 @@
 <script>
 export default {
   name: 'ListBox',
-  props: ['title'],
+  props: ['list', 'issues'],
+  computed: {
+    filteredIssues() {
+      return this.issues.filter((el) => this.list.id === el.listId);
+    },
+  },
   components: {
     IssueCard: () => import('@/components/main/IssueCard.vue'),
   },

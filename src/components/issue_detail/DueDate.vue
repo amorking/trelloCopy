@@ -40,9 +40,9 @@
 <script>
 export default {
   name: 'DueDate',
+  props: ['date'],
   data() {
     return {
-      date: new Date().toISOString().substr(0, 10),
       menu: false,
     };
   },
