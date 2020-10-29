@@ -1,16 +1,18 @@
 <template>
-  <v-overlay :value="true">
-    <v-card class="issue-detail-card" light color="#ebecf0">
-      <v-title class="issue-detail-header">
+  <v-overlay :value="true" class="issue-detail-overlay" opacity="0">
+    <v-card class="issue-detail-card my-10" light color="#ebecf0">
+      <div class="issue-detail-header">
         <v-container fluid>
           <v-row align="start" no-gutters>
-            <v-col class="d-flex align-start" cols="10">
-              <v-icon class="header-ico mr-2">
-                mdi-inbox-full
-              </v-icon>
+            <v-col class="d-flex" cols="10">
               <div class="header-title-wrapper">
-                <h4 class="header-title">{{ title }}</h4>
-                <span class="header-desc">in list {{ title }}</span>
+                <v-icon class="header-ico">
+                  mdi-inbox-full
+                </v-icon>
+                <div class="ml-10">
+                  <h4 class="header-title">{{ title }}</h4>
+                  <span class="header-desc">in list {{ title }}</span>
+                </div>
               </div>
             </v-col>
             <v-col class="d-flex justify-end" cols="2">
@@ -22,9 +24,9 @@
             </v-col>
           </v-row>
         </v-container>
-      </v-title>
+      </div>
 
-      <v-text class="issue-detail-option">
+      <div class="issue-detail-option">
         <v-container class="pt-0" fluid>
           <v-row>
             <v-col class="option-wrapper d-flex" cols="12" md="8">
@@ -40,7 +42,7 @@
             </v-col>
           </v-row>
         </v-container>
-      </v-text>
+      </div>
     </v-card>
   </v-overlay>
 </template>
@@ -63,20 +65,33 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.issue-detail-overlay {
+  align-items: flex-start;
+  background: rgba($color: #000000, $alpha: 0.6);
+  overflow-y: auto;
+}
 .issue-detail-card {
   width: 50vw;
-  min-height: 80vh;
   .issue-detail-header {
-    .header-title {
-      padding-top: 2px;
-    }
-    .header-desc {
-      font-size: 0.8rem;
+    .header-title-wrapper {
+      position: relative;
+      .header-ico {
+        position: absolute;
+      }
+      .header-title {
+        padding-top: 2px;
+      }
+      .header-desc {
+        font-size: 0.8rem;
+      }
     }
   }
   .issue-detail-option {
     .option {
       margin-bottom: 32px;
+    }
+    .option:last-child {
+      margin-bottom: 0;
     }
   }
 }

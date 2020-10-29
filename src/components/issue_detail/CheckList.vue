@@ -1,10 +1,10 @@
 <template>
-  <div class="check-list">
-    <v-row class="txt d-flex align-center justify-space-between">
-      <v-icon class="ico mr-2">
-        mdi-check-box-outline
+  <div class="check-list-module">
+    <v-row class="check-list-header d-flex align-center justify-space-between">
+      <v-icon class="ico">
+        mdi-checkbox-multiple-marked-outline
       </v-icon>
-      <div class="txt d-flex flex-grow-1 align-center">
+      <div class="check-list-title d-flex flex-grow-1 align-center ml-10">
         <h4>CheckList</h4>
         <v-btn
           class="px-2 ml-auto"
@@ -17,18 +17,28 @@
       </div>
     </v-row>
     <v-row class="progress-wrapper align-center">
-      <span class="progress-percent ml-1">0%</span>
+      <span class="progress-percent ml-1">{{ progress }}%</span>
       <v-progress-linear
-        class="my-4 ml-8"
-        value="15"
+        class="my-2 ml-10"
         height="10"
+        :value="progress"
         rounded
         color="#bbb"
       ></v-progress-linear>
     </v-row>
-    <CheckItem></CheckItem>
-    <v-row class="check-item-wrapper pl-8">
-      <v-btn>Add an item</v-btn>
+    <v-row class="check-item-container">
+      <div class="check-item-wrapper ml-9">
+        <v-checkbox
+          v-for="(task, i) in tasks"
+          :key="i"
+          v-model="task.complete"
+          :label="task.title"
+          hide-details
+        ></v-checkbox>
+      </div>
+    </v-row>
+    <v-row class="btn-check-add pt-4">
+      <v-btn class="ml-10">Add an item</v-btn>
     </v-row>
   </div>
 </template>
@@ -36,31 +46,40 @@
 <script>
 export default {
   name: 'CheckList',
-  components: {
-    CheckItem: () => import('@/components/issue_detail/CheckItem.vue'),
-  },
+  components: {},
   data() {
     return {
       tasks: [
-        { title: 'task', complete: false },
-        { title: 'task', complete: false },
+        { title: 'task 01', complete: false },
+        { title: 'task 02', complete: false },
       ],
-      checkbox: false,
     };
+  },
+  computed: {
+    progress() {
+      let completeNum = this.tasks.filter((el) => el.complete).length;
+      return (completeNum / this.tasks.length) * 100;
+    },
   },
 };
 </script>
 
 <style lang="scss" scoped>
-.check-list {
-  .txt {
-    padding-top: 2px;
+.check-list-module {
+  .check-list-header {
+    position: relative;
+    .ico {
+      position: absolute;
+    }
+    .check-list-title {
+      padding-top: 2px;
+    }
   }
   .progress-wrapper {
     position: relative;
     .progress-percent {
       position: absolute;
-      font-size: 0.8rem;
+      font-size: 0.65rem;
     }
   }
 }
