@@ -1,5 +1,10 @@
 <template>
-  <v-overlay :value="true" class="issue-detail-overlay" opacity="0">
+  <v-overlay
+    :value="isDetailShow"
+    class="issue-detail-overlay"
+    :class="{ active: isDetailShow }"
+    opacity="0"
+  >
     <v-card class="issue-detail-card my-10" light color="#ebecf0">
       <div class="issue-detail-header">
         <v-container fluid>
@@ -16,7 +21,7 @@
               </div>
             </v-col>
             <v-col class="d-flex justify-end" cols="2">
-              <v-btn icon>
+              <v-btn icon @click="closeDetail">
                 <v-icon>
                   mdi-close
                 </v-icon>
@@ -48,6 +53,8 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
+
 export default {
   name: 'IssueDetail',
   props: ['list', 'title'],
@@ -61,14 +68,24 @@ export default {
   data() {
     return {};
   },
+  computed: {
+    ...mapState(['isDetailShow']),
+  },
+  methods: {
+    closeDetail() {
+      this.$store.commit('toggleIsDetailShow');
+    },
+  },
 };
 </script>
 
 <style lang="scss" scoped>
 .issue-detail-overlay {
   align-items: flex-start;
-  background: rgba($color: #000000, $alpha: 0.6);
   overflow-y: auto;
+}
+.active {
+  background: rgba($color: #000000, $alpha: 0.6);
 }
 .issue-detail-card {
   width: 50vw;

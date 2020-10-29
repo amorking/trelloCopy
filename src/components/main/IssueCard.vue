@@ -1,6 +1,6 @@
 <template>
   <div class="issue-card">
-    <v-card class="pa-2 mb-2" elevation="1">
+    <v-card class="pa-2 mb-2" elevation="1" @click="openDetail">
       <h4>{{ title }}</h4>
       <div class="icons-wrapper"></div>
     </v-card>
@@ -13,6 +13,11 @@ export default {
   props: ['title'],
   data() {
     return {};
+  },
+  methods: {
+    openDetail() {
+      this.$store.commit('toggleIsDetailShow');
+    },
   },
 };
 </script>

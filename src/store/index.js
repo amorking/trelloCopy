@@ -6,8 +6,13 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     list: [],
+    isDetailShow: false,
   },
-  mutations: {},
+  mutations: {
+    toggleIsDetailShow(state) {
+      state.isDetailShow = !state.isDetailShow;
+    },
+  },
   actions: {},
   modules: {},
 });
