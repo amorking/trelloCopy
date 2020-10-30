@@ -51,7 +51,7 @@ export default new Vuex.Store({
         ],
       },
       {
-        id: 0,
+        id: 1,
         listId: 0, //lists의 id
         title: 'gallery',
         description: ' make gallery',
@@ -81,7 +81,7 @@ export default new Vuex.Store({
         ],
       },
       {
-        id: 1,
+        id: 2,
         listId: 1, //lists의 id
         title: 'test 3',
         description: 'this is test 3',
@@ -123,6 +123,20 @@ export default new Vuex.Store({
     },
     setCurrentIssue(state, payload) {
       state.currentIssue = payload;
+    },
+    fixDate(state, payload) {
+      let target = state.issues.find((el) => el.id === payload.id);
+      target.dueDate = payload.dueDate;
+    },
+    fixDesc(state, payload) {
+      let target = state.issues.find((el) => el.id === payload.id);
+      target.description = payload.description;
+    },
+    editIssue(state, payload) {
+      let target = state.issues.find((el) => el.id === payload.id);
+      Object.assign(target, payload);
+      //Object.assign을 사용한다. Object.assign(target, ...sources)
+      //issues의 객체를 통째로 변경 > 불필요한 교체를 줄이고 변화가 생긴 데이터만 변경
     },
   },
   actions: {},

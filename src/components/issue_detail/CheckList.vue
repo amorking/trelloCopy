@@ -34,11 +34,34 @@
           v-model="task.complete"
           :label="task.title"
           hide-details
-        ></v-checkbox>
+        >
+        </v-checkbox>
       </div>
     </v-row>
     <v-row class="btn-check-add pt-4">
-      <v-btn class="ml-10">Add an item</v-btn>
+      <v-btn class="ml-10" @click="editCheck = true" v-if="!editCheck">
+        Add an item
+      </v-btn>
+    </v-row>
+    <v-row class="add-check-wrapper flex-column" v-if="editCheck">
+      <v-textarea
+        label="write description"
+        class="ml-10"
+        rows="1"
+        background-color="rgba(9,30,66,.04)"
+        hide-details
+        solo
+        auto-grow
+        v-model="title"
+      ></v-textarea>
+      <div class="btn-wrapper ml-10 mt-4">
+        <v-btn class="mr-2" color="green" height="30" @click="save">Save</v-btn>
+        <v-btn width="30" height="30" icon @click="editCheck = false">
+          <v-icon>
+            mdi-close
+          </v-icon>
+        </v-btn>
+      </div>
     </v-row>
   </div>
 </template>
@@ -49,13 +72,19 @@ export default {
   props: ['tasks'],
   components: {},
   data() {
-    return {};
+    return {
+      editCheck: false,
+      title: '',
+    };
   },
   computed: {
     progress() {
       let completeNum = this.tasks.filter((el) => el.complete).length;
-      return (completeNum / this.tasks.length) * 100;
+      return Math.floor((completeNum / this.tasks.length) * 100);
     },
+  },
+  methods: {
+    save() {},
   },
 };
 </script>

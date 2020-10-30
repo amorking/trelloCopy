@@ -41,11 +41,13 @@
                 <v-container class="pt-0">
                   <DueDate
                     class="option"
-                    :date="currentIssue.dueDate"
+                    :init-date="currentIssue.dueDate"
+                    @change-date="changeDate"
                   ></DueDate>
                   <Description
                     class="option"
-                    :desc="currentIssue.description"
+                    :init-desc="currentIssue.description"
+                    @change-desc="changeDesc"
                   ></Description>
                   <CheckList
                     class="option"
@@ -70,6 +72,7 @@
 
 <script>
 import { mapState } from 'vuex';
+import _ from 'lodash';
 
 export default {
   name: 'IssueDetail',
@@ -89,6 +92,23 @@ export default {
   methods: {
     closeDetail() {
       this.$store.commit('toggleIsDetailShow');
+    },
+    changeDate(date) {
+      //DueDate.vue에서 date의 값이 변경될 때 바로 커밋
+      this.$store.commit('fixDate', {
+        id: this.currentIssue.id,
+        dueDate: date,
+      });
+    },
+    changeDesc(text) {
+      //DueDate.vue에서 date의 값이 변경될 때 바로 커밋
+      // this.$store.commit('fixDesc', {
+      //   id: this.currentIssue.id,
+      //   description: text,
+      // });
+      let clone = _.cloneDeep(this.currentIssue); //클론 생성, 원본 데이터 보존
+      clone.description = text; //클론의 description을 수정
+      this.$store.commit('editIssue', clone);
     },
   },
 };
