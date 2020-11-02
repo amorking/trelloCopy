@@ -42,15 +42,18 @@
       </div>
     </v-row>
     <v-row class="description-txt mt-4">
-      <p class="ml-10" v-if="!editDesc" @click="editDesc = true">{{ desc }}</p>
+      <p class="ml-10" v-if="!editDesc" @click="editDesc = true">
+        {{ desc }}
+      </p>
       <v-textarea
-        label="write description"
-        class="ml-10"
-        rows="1"
+        placeholder="write description"
+        class="ml-10 input-desc"
+        rows="2"
         background-color="rgba(9,30,66,.04)"
         hide-details
-        solo
+        flat
         auto-grow
+        solo
         v-if="editDesc"
         v-model="desc"
       ></v-textarea>

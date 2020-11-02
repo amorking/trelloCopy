@@ -24,10 +24,17 @@
           class="comment-text-field"
           placeholder="Write a comments..."
           hide-details
+          v-model="newComment"
+          @keyup.enter="save"
         >
+          <template v-slot:append
+            ><v-btn text small color="green" height="24" @click="save"
+              >Save</v-btn
+            ></template
+          >
         </v-text-field>
       </v-row>
-      <v-row v-for="(comment, i) in activities" :key="i" class="mb-4">
+      <v-row v-for="(comment, i) in orderedActivities" :key="i" class="mb-4">
         <div class="profile-wrapper mr-2">
           <v-avatar><v-img :src="comment.imgSrc"></v-img></v-avatar>
         </div>
@@ -36,11 +43,18 @@
             <strong class="mr-2">{{ comment.name }}</strong>
             <span class="date-text">{{ formatDate(comment.createdAt) }}</span>
           </p>
-          <v-card class="text-card py-2 px-3 mb-2">
-            <p>{{ comment.text }}</p>
-          </v-card>
+          <div>
+            <v-text-field
+              class="comment-input mb-2"
+              v-model="comment.text"
+              :readonly="isEdit !== i"
+              :dark="isEdit === i"
+              solo
+              hide-details
+            ></v-text-field>
+          </div>
           <div class="activity-actions">
-            <button class="mr-2">Edit</button>
+            <button class="mr-2" @click="isEdit = i">Edit</button>
             <button>Delete</button>
           </div>
         </div>
@@ -51,20 +65,52 @@
 
 <script>
 import moment from 'moment';
+import _ from 'lodash';
 
 export default {
   name: 'Activity',
   props: ['activities'],
+  computed: {
+    newCommentId() {
+      return (
+        this.activities.reduce((acc, cur) => {
+          return Math.max(acc, cur.id);
+        }, 0) + 1
+      );
+    },
+    orderedActivities() {
+      let clone = _.cloneDeep(this.activities);
+      return clone.sort((a, b) => {
+        return moment(b.createdAt).unix() - moment(a.createdAt).unix();
+      });
+    },
+  },
   data() {
     return {
+      newComment: '',
       profileImg:
         'https://6.vikiplatform.com/image/a11230e2d98d4a73825a4c10c8c6feb0.jpg?x=b&a=0x0&s=590x330&q=h&e=t&f=t&cb=1',
+      isEdit: false,
     };
   },
   methods: {
     formatDate(date) {
       let created = moment(date);
-      return created.format('MMMM Do ddd');
+      return created.format('MMMM Do ddd [at] HH:mm a');
+    },
+    save() {
+      this.$emit('add-comment', {
+        id: this.newCommentId,
+        imgSrc:
+          'https://6.vikiplatform.com/image/a11230e2d98d4a73825a4c10c8c6feb0.jpg?x=b&a=0x0&s=590x330&q=h&e=t&f=t&cb=1',
+        name: '나의 이름',
+        text: this.newComment,
+        createdAt: moment().toISOString(),
+      });
+      this.newComment = '';
+    },
+    edit() {
+      this.isEdit = this.comment.id;
     },
   },
 };

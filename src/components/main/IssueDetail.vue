@@ -51,10 +51,13 @@
                   ></Description>
                   <CheckList
                     class="option"
-                    :tasks="currentIssue.checklist"
+                    :cur-issue="currentIssue"
+                    :init-tasks="currentIssue.checklist"
+                    @add-item="addCheckListItem"
                   ></CheckList>
                   <Activity
                     class="option"
+                    @add-comment="addComment"
                     :activities="currentIssue.activities"
                   ></Activity>
                 </v-container>
@@ -108,6 +111,16 @@ export default {
       // });
       let clone = _.cloneDeep(this.currentIssue); //클론 생성, 원본 데이터 보존
       clone.description = text; //클론의 description을 수정
+      this.$store.commit('editIssue', clone);
+    },
+    addCheckListItem(item) {
+      let clone = _.cloneDeep(this.currentIssue); //클론 생성, 원본 데이터 보존
+      clone.checklist.push(item);
+      this.$store.commit('editIssue', clone);
+    },
+    addComment(comment) {
+      let clone = _.cloneDeep(this.currentIssue); //클론 생성, 원본 데이터 보존
+      clone.activities.push(comment);
       this.$store.commit('editIssue', clone);
     },
   },
