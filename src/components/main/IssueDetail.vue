@@ -58,12 +58,20 @@
                   <Activity
                     class="option"
                     @add-comment="addComment"
+                    @edit-comment="editComment"
+                    @delete-comment="deleteComment"
                     :activities="currentIssue.activities"
                   ></Activity>
                 </v-container>
               </v-col>
               <v-col cols="12" md="4">
-                <Actions></Actions>
+                <Actions
+                  :issues="issues"
+                  :cur-issue="currentIssue"
+                  @move="moveToList"
+                  @copy="copyIssue"
+                >
+                </Actions>
               </v-col>
             </v-row>
           </v-container>
@@ -90,7 +98,7 @@ export default {
     return {};
   },
   computed: {
-    ...mapState(['isDetailShow', 'currentIssue', 'currentList']),
+    ...mapState(['issues', 'isDetailShow', 'currentIssue', 'currentList']),
   },
   methods: {
     closeDetail() {
@@ -122,6 +130,30 @@ export default {
       let clone = _.cloneDeep(this.currentIssue); //클론 생성, 원본 데이터 보존
       clone.activities.push(comment);
       this.$store.commit('editIssue', clone);
+    },
+    editComment(comment) {
+      let clone = _.cloneDeep(this.currentIssue); //클론 생성, 원본 데이터 보존
+      let target = clone.activities.find((el) => el.id === comment.id);
+      //{ text: this.editedComment, id: id } 받아온 데이터의 id와 동일한 객체를 리턴
+      target.text = comment.text; //타겟의 text를 받아온 데이터의 text로 대체
+      this.$store.commit('editIssue', clone); //변경된 내용을 store에 커밋
+    },
+    deleteComment(id) {
+      let clone = _.cloneDeep(this.currentIssue); //클론 생성, 원본 데이터 보존
+      let targetIndex = clone.activities.findIndex((el) => el.id === id);
+      //comment.id와 동일한 객체의 index를 리턴
+      clone.activities.splice(targetIndex, 1); //targetIndex로부터 하나 삭제
+      this.$store.commit('editIssue', clone); //변경된 내용을 store에 커밋
+    },
+    moveToList(item) {
+      let clone = _.cloneDeep(this.currentIssue); //클론 생성, 원본 데이터 보존
+      clone.listId = item.id;
+      this.$store.commit('editIssue', clone);
+    },
+    copyIssue(newId) {
+      let clone = _.cloneDeep(this.currentIssue);
+      clone.id = newId.id;
+      this.$store.commit('copyIssue', clone);
     },
   },
 };

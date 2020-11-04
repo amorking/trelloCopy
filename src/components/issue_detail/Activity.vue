@@ -16,50 +16,66 @@
         </v-btn>
       </div>
     </v-row>
-    <div class="activity-list-wrapper pl-10">
+    <v-row class="activity-list-wrapper">
       <v-row class="comment-text-field-wrapper align-center mb-4">
-        <v-avatar class="mr-2"><v-img :src="profileImg"></v-img></v-avatar>
-        <v-text-field
-          outlined
-          class="comment-text-field"
-          placeholder="Write a comments..."
-          hide-details
-          v-model="newComment"
-          @keyup.enter="save"
-        >
-          <template v-slot:append
-            ><v-btn text small color="green" height="24" @click="save"
-              >Save</v-btn
-            ></template
+        <v-col cols="2"
+          ><v-avatar class="mr-2"><v-img :src="profileImg"></v-img></v-avatar
+        ></v-col>
+        <v-col cols="10">
+          <v-text-field
+            outlined
+            class="comment-text-field"
+            placeholder="Write a comments..."
+            hide-details
+            v-model="newComment"
+            @keyup.enter="save"
           >
-        </v-text-field>
+            <template v-slot:append
+              ><v-btn text small color="green" height="24" @click="save"
+                >Save</v-btn
+              ></template
+            >
+          </v-text-field>
+        </v-col>
       </v-row>
-      <v-row v-for="(comment, i) in orderedActivities" :key="i" class="mb-4">
-        <div class="profile-wrapper mr-2">
+      <v-row v-for="(comment, i) in orderedActivities" :key="i">
+        <v-col class="profile-wrapper" cols="2">
           <v-avatar><v-img :src="comment.imgSrc"></v-img></v-avatar>
-        </div>
-        <div class="text-wrapper">
+        </v-col>
+        <v-col class="text-wrapper" cols="10">
           <p class="mb-1">
             <strong class="mr-2">{{ comment.name }}</strong>
             <span class="date-text">{{ formatDate(comment.createdAt) }}</span>
           </p>
-          <div>
-            <v-text-field
+          <div class="comment-input-wrapper" v-if="isEdit !== i">
+            <p class="comment-txt">
+              {{ comment.text }}
+            </p>
+          </div>
+          <div class="comment-input-wrapper-editing" v-else>
+            <v-textarea
               class="comment-input mb-2"
-              v-model="comment.text"
-              :readonly="isEdit !== i"
+              v-model="editedComment"
               :dark="isEdit === i"
+              rows="1"
+              auto-grow
               solo
               hide-details
-            ></v-text-field>
+            ></v-textarea>
           </div>
-          <div class="activity-actions">
-            <button class="mr-2" @click="isEdit = i">Edit</button>
-            <button>Delete</button>
+          <div class="activity-actions" v-if="isEdit !== i">
+            <button class="mr-2" @click="toEdit(comment.text, i)">Edit</button>
+            <button @click="deleteComment(comment.id)">Delete</button>
           </div>
-        </div>
+          <div class="btn-edit-wrapper" v-if="isEdit === i">
+            <v-btn color="green" dark @click="edit(comment.id)">save</v-btn>
+            <v-btn icon @click="isEdit = undefined">
+              <v-icon>mdi-close</v-icon>
+            </v-btn>
+          </div>
+        </v-col>
       </v-row>
-    </div>
+    </v-row>
   </div>
 </template>
 
@@ -90,7 +106,8 @@ export default {
       newComment: '',
       profileImg:
         'https://6.vikiplatform.com/image/a11230e2d98d4a73825a4c10c8c6feb0.jpg?x=b&a=0x0&s=590x330&q=h&e=t&f=t&cb=1',
-      isEdit: false,
+      isEdit: undefined,
+      editedComment: '',
     };
   },
   methods: {
@@ -109,8 +126,16 @@ export default {
       });
       this.newComment = '';
     },
-    edit() {
-      this.isEdit = this.comment.id;
+    toEdit(comment, index) {
+      this.isEdit = index;
+      this.editedComment = comment;
+    },
+    edit(id) {
+      this.$emit('edit-comment', { text: this.editedComment, id: id });
+      this.isEdit = undefined;
+    },
+    deleteComment(id) {
+      this.$emit('delete-comment', id);
     },
   },
 };
@@ -136,8 +161,12 @@ export default {
       p {
         margin: 0;
       }
-      .text-card {
+      .comment-input-wrapper {
         display: inline-block;
+        background: #fff;
+        padding: 12px;
+        border-radius: 4px;
+        margin-bottom: 8px;
       }
     }
     .activity-actions {

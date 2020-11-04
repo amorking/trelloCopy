@@ -23,10 +23,10 @@ export default {
   props: ['cur-issue', 'task'],
   methods: {
     delItem() {
-      this.$store.commit(
-        'delCheckItem',
-        this.curIssue.checklist.find((el) => el.id === this.task.id)
-      );
+      this.$store.commit('delCheckItem', {
+        issueId: this.curIssue.id,
+        taskId: this.task.id,
+      });
     },
   },
 };

@@ -2,22 +2,34 @@
   <div class="actions">
     <h5 class="mb-2">ACTIONS</h5>
     <div class="actions-group-top">
+      <v-menu offset-y>
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn
+            class="px-2 justify-start"
+            v-bind="attrs"
+            v-on="on"
+            depressed
+            block
+            color="rgba(9, 30, 66, 0.04)"
+          >
+            <v-icon class="mr-2" size="18">
+              mdi-arrow-right
+            </v-icon>
+            <span class="txt">Move</span>
+          </v-btn>
+        </template>
+        <v-list>
+          <v-list-item v-for="(item, i) in lists" :key="i" @click="move(item)">
+            <v-list-item-title>{{ item.title }}</v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </v-menu>
       <v-btn
         class="px-2 justify-start"
         depressed
         block
         color="rgba(9, 30, 66, 0.04)"
-      >
-        <v-icon class="mr-2" size="18">
-          mdi-arrow-right
-        </v-icon>
-        <span class="txt">Move</span>
-      </v-btn>
-      <v-btn
-        class="px-2 justify-start"
-        depressed
-        block
-        color="rgba(9, 30, 66, 0.04)"
+        @click="copy"
       >
         <v-icon class="mr-2" size="18">
           mdi-content-copy
@@ -76,8 +88,29 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
+
 export default {
   name: 'Actions',
+  props: ['issues', 'cur-issue'],
+  computed: {
+    ...mapState(['lists']),
+    newIssueId() {
+      return (
+        this.issues.reduce((acc, cur) => {
+          return Math.max(acc, cur.id);
+        }, 0) + 1
+      );
+    },
+  },
+  methods: {
+    move(item) {
+      this.$emit('move', item);
+    },
+    copy() {
+      this.$emit('copy', { id: this.newIssueId });
+    },
+  },
 };
 </script>
 

@@ -138,6 +138,16 @@ export default new Vuex.Store({
       //Object.assign을 사용한다. Object.assign(target, ...sources)
       //issues의 객체를 통째로 변경 > 불필요한 교체를 줄이고 변화가 생긴 데이터만 변경
     },
+    delCheckItem(state, payload) {
+      let targetIssue = state.issues.find((el) => el.id === payload.issueId);
+      let target = targetIssue.checklist.findIndex(
+        (el) => el.id === payload.taskId
+      );
+      targetIssue.checklist.splice(target, 1);
+    },
+    copyIssue(state, payload) {
+      state.issues.push(payload);
+    },
   },
   actions: {},
   modules: {},
