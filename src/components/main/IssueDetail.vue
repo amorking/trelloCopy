@@ -5,79 +5,68 @@
     :class="{ active: isDetailShow }"
     opacity="0"
   >
-    <div class="issue-detail-content">
-      <v-card class="issue-detail-card my-10" light color="#ebecf0">
-        <div class="issue-detail-header">
-          <v-container fluid>
-            <v-row align="start" no-gutters>
-              <v-col class="d-flex" cols="10">
-                <div class="header-title-wrapper">
-                  <v-icon class="header-ico">
-                    mdi-inbox-full
-                  </v-icon>
-                  <div class="ml-10">
-                    <h4 class="header-title">{{ currentIssue.title }}</h4>
-                    <span class="header-desc"
-                      >in list {{ currentList.title }}</span
-                    >
-                  </div>
-                </div>
-              </v-col>
-              <v-col class="d-flex justify-end" cols="2">
-                <v-btn icon @click="closeDetail">
-                  <v-icon>
-                    mdi-close
-                  </v-icon>
-                </v-btn>
-              </v-col>
-            </v-row>
-          </v-container>
-        </div>
+    <v-card class="issue-detail-card my-10" color="#f4f5f7" light>
+      <v-container class="py-0">
+        <v-row class="header-title-wrapper align-start">
+          <v-col cols="10">
+            <v-icon class="header-ico">
+              mdi-inbox-full
+            </v-icon>
+            <div class="ml-10">
+              <h4 class="header-title">{{ currentIssue.title }}</h4>
+              <span class="header-desc">in list {{ currentList.title }}</span>
+            </div>
+          </v-col>
+          <v-col class="d-flex justify-end" cols="2">
+            <v-btn icon @click="closeDetail">
+              <v-icon>
+                mdi-close
+              </v-icon>
+            </v-btn>
+          </v-col>
+        </v-row>
+      </v-container>
 
-        <div class="issue-detail-option">
-          <v-container class="pt-0" fluid>
-            <v-row>
-              <v-col class="option-wrapper d-flex" cols="12" md="8">
-                <v-container class="pt-0">
-                  <DueDate
-                    class="option"
-                    :init-date="currentIssue.dueDate"
-                    @change-date="changeDate"
-                  ></DueDate>
-                  <Description
-                    class="option"
-                    :init-desc="currentIssue.description"
-                    @change-desc="changeDesc"
-                  ></Description>
-                  <CheckList
-                    class="option"
-                    :cur-issue="currentIssue"
-                    :init-tasks="currentIssue.checklist"
-                    @add-item="addCheckListItem"
-                  ></CheckList>
-                  <Activity
-                    class="option"
-                    @add-comment="addComment"
-                    @edit-comment="editComment"
-                    @delete-comment="deleteComment"
-                    :activities="currentIssue.activities"
-                  ></Activity>
-                </v-container>
-              </v-col>
-              <v-col cols="12" md="4">
-                <Actions
-                  :issues="issues"
-                  :cur-issue="currentIssue"
-                  @move="moveToList"
-                  @copy="copyIssue"
-                >
-                </Actions>
-              </v-col>
-            </v-row>
-          </v-container>
-        </div>
-      </v-card>
-    </div>
+      <v-container class="pt-0">
+        <v-row>
+          <v-col class="option-wrapper" cols="12" md="8">
+            <DueDate
+              class="option"
+              :init-date="currentIssue.dueDate"
+              @change-date="changeDate"
+            ></DueDate>
+            <Description
+              class="option"
+              :init-desc="currentIssue.description"
+              @change-desc="changeDesc"
+            ></Description>
+            <CheckList
+              class="option"
+              :cur-issue="currentIssue"
+              :init-tasks="currentIssue.checklist"
+              @add-item="addCheckListItem"
+            ></CheckList>
+            <Activity
+              class="option"
+              @add-comment="addComment"
+              @edit-comment="editComment"
+              @delete-comment="deleteComment"
+              :activities="currentIssue.activities"
+            ></Activity>
+          </v-col>
+          <v-col cols="12" md="4">
+            <Actions
+              :issues="issues"
+              :cur-issue="currentIssue"
+              @move="moveToList"
+              @copy="copyToList"
+              @delete-issue="deleteIssue"
+            >
+            </Actions>
+          </v-col>
+        </v-row>
+      </v-container>
+    </v-card>
   </v-overlay>
 </template>
 
@@ -99,6 +88,13 @@ export default {
   },
   computed: {
     ...mapState(['issues', 'isDetailShow', 'currentIssue', 'currentList']),
+    newIssueId() {
+      return (
+        this.issues.reduce((acc, cur) => {
+          return Math.max(acc, cur.id);
+        }, 0) + 1
+      );
+    },
   },
   methods: {
     closeDetail() {
@@ -150,10 +146,15 @@ export default {
       clone.listId = item.id;
       this.$store.commit('editIssue', clone);
     },
-    copyIssue(newId) {
+    copyToList(item) {
       let clone = _.cloneDeep(this.currentIssue);
-      clone.id = newId.id;
-      this.$store.commit('copyIssue', clone);
+      clone.id = this.newIssueId;
+      clone.listId = item.id;
+      clone.title = clone.title + ' copy';
+      this.$store.commit('addIssue', clone);
+    },
+    deleteIssue() {
+      this.$store.commit('deleteIssue', this.currentIssue.id);
     },
   },
 };
@@ -169,26 +170,10 @@ export default {
 }
 .issue-detail-card {
   width: 50vw;
-  .issue-detail-header {
-    .header-title-wrapper {
-      position: relative;
-      .header-ico {
-        position: absolute;
-      }
-      .header-title {
-        padding-top: 2px;
-      }
-      .header-desc {
-        font-size: 0.8rem;
-      }
-    }
-  }
-  .issue-detail-option {
-    .option {
-      margin-bottom: 32px;
-    }
-    .option:last-child {
-      margin-bottom: 0;
+  .header-title-wrapper {
+    position: relative;
+    .header-ico {
+      position: absolute;
     }
   }
 }

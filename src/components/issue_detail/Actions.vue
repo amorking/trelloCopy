@@ -24,18 +24,29 @@
           </v-list-item>
         </v-list>
       </v-menu>
-      <v-btn
-        class="px-2 justify-start"
-        depressed
-        block
-        color="rgba(9, 30, 66, 0.04)"
-        @click="copy"
-      >
-        <v-icon class="mr-2" size="18">
-          mdi-content-copy
-        </v-icon>
-        <span class="txt">Copy</span>
-      </v-btn>
+      <v-menu offset-y>
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn
+            class="px-2 justify-start"
+            depressed
+            block
+            color="rgba(9, 30, 66, 0.04)"
+            v-bind="attrs"
+            v-on="on"
+            @click="copy"
+          >
+            <v-icon class="mr-2" size="18">
+              mdi-content-copy
+            </v-icon>
+            <span class="txt">Copy</span>
+          </v-btn>
+        </template>
+        <v-list>
+          <v-list-item v-for="(item, i) in lists" :key="i" @click="copy(item)">
+            <v-list-item-title>{{ item.title }}</v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </v-menu>
       <v-btn
         class="px-2 justify-start"
         depressed
@@ -83,6 +94,40 @@
         </v-icon>
         <span class="txt">Share</span>
       </v-btn>
+      <div class="btn-del-wrapper">
+        <v-btn
+          class="btn-del px-2 justify-start"
+          color="rgba(9, 30, 66, 0.04)"
+          depressed
+          block
+          v-if="!isDelete"
+          @click="isDelete = !isDelete"
+        >
+          <v-icon class="mr-2" size="18">
+            mdi-delete
+          </v-icon>
+          <span class="txt">Delete</span>
+        </v-btn>
+        <div class="btn-del-real d-flex" v-else>
+          <v-btn
+            class="px-2 justify-start flex-grow-1"
+            color="red"
+            depressed
+            dark
+            @click="delIssue"
+          >
+            <v-icon class="mr-2" size="18">
+              mdi-delete
+            </v-icon>
+            <span class="txt">Are u sure?</span>
+          </v-btn>
+          <v-btn icon>
+            <v-icon color="red" @click="isDelete = !isDelete">
+              mdi-close
+            </v-icon>
+          </v-btn>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -92,23 +137,26 @@ import { mapState } from 'vuex';
 
 export default {
   name: 'Actions',
-  props: ['issues', 'cur-issue'],
+  props: ['cur-issue'],
   computed: {
     ...mapState(['lists']),
-    newIssueId() {
-      return (
-        this.issues.reduce((acc, cur) => {
-          return Math.max(acc, cur.id);
-        }, 0) + 1
-      );
-    },
+  },
+  data() {
+    return {
+      isDelete: false,
+    };
   },
   methods: {
     move(item) {
       this.$emit('move', item);
     },
-    copy() {
-      this.$emit('copy', { id: this.newIssueId });
+    copy(item) {
+      this.$emit('copy', item);
+    },
+    delIssue() {
+      this.isDelete = !this.isDelete;
+      this.$store.commit('toggleIsDetailShow');
+      this.$emit('delete-issue');
     },
   },
 };

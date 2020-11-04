@@ -145,8 +145,12 @@ export default new Vuex.Store({
       );
       targetIssue.checklist.splice(target, 1);
     },
-    copyIssue(state, payload) {
+    addIssue(state, payload) {
       state.issues.push(payload);
+    },
+    deleteIssue(state, payload) {
+      let targetIndex = state.issues.findIndex((el) => el.id === payload);
+      state.issues.splice(targetIndex, 1);
     },
   },
   actions: {},

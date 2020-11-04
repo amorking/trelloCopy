@@ -1,5 +1,5 @@
 <template>
-  <div class="activity-module">
+  <v-container class="activity-module">
     <v-row class="activity-header align-center mb-2">
       <v-icon class="ico">
         mdi-format-list-bulleted-square
@@ -16,37 +16,31 @@
         </v-btn>
       </div>
     </v-row>
-    <v-row class="activity-list-wrapper">
-      <v-row class="comment-text-field-wrapper align-center mb-4">
-        <v-col cols="2"
-          ><v-avatar class="mr-2"><v-img :src="profileImg"></v-img></v-avatar
-        ></v-col>
-        <v-col cols="10">
-          <v-text-field
-            outlined
-            class="comment-text-field"
-            placeholder="Write a comments..."
-            hide-details
-            v-model="newComment"
-            @keyup.enter="save"
-          >
-            <template v-slot:append
-              ><v-btn text small color="green" height="24" @click="save"
-                >Save</v-btn
-              ></template
-            >
-          </v-text-field>
-        </v-col>
-      </v-row>
-      <v-row v-for="(comment, i) in orderedActivities" :key="i">
-        <v-col class="profile-wrapper" cols="2">
-          <v-avatar><v-img :src="comment.imgSrc"></v-img></v-avatar>
-        </v-col>
-        <v-col class="text-wrapper" cols="10">
-          <p class="mb-1">
-            <strong class="mr-2">{{ comment.name }}</strong>
-            <span class="date-text">{{ formatDate(comment.createdAt) }}</span>
-          </p>
+    <v-row class="activity-list-wrapper align-center mb-4">
+      <v-avatar class="mr-4"><v-img :src="profileImg"></v-img></v-avatar>
+      <v-text-field
+        outlined
+        class="comment-text-field"
+        placeholder="Write a comments..."
+        hide-details
+        v-model="newComment"
+        @keyup.enter="save"
+      >
+        <template v-slot:append
+          ><v-btn text small color="green" height="24" @click="save"
+            >Save</v-btn
+          ></template
+        >
+      </v-text-field>
+    </v-row>
+    <v-row v-for="(comment, i) in orderedActivities" :key="i" class="mb-4">
+      <v-avatar class="mr-4"><v-img :src="comment.imgSrc"></v-img></v-avatar>
+      <div class="comment-container flex-grow-1">
+        <p class="mb-1">
+          <strong class="mr-2">{{ comment.name }}</strong>
+          <span class="date-text">{{ formatDate(comment.createdAt) }}</span>
+        </p>
+        <div class="text-wrapper">
           <div class="comment-input-wrapper" v-if="isEdit !== i">
             <p class="comment-txt">
               {{ comment.text }}
@@ -64,7 +58,9 @@
             ></v-textarea>
           </div>
           <div class="activity-actions" v-if="isEdit !== i">
-            <button class="mr-2" @click="toEdit(comment.text, i)">Edit</button>
+            <button class="mr-2" @click="toEdit(comment.text, i)">
+              Edit
+            </button>
             <button @click="deleteComment(comment.id)">Delete</button>
           </div>
           <div class="btn-edit-wrapper" v-if="isEdit === i">
@@ -73,10 +69,10 @@
               <v-icon>mdi-close</v-icon>
             </v-btn>
           </div>
-        </v-col>
-      </v-row>
+        </div>
+      </div>
     </v-row>
-  </div>
+  </v-container>
 </template>
 
 <script>
@@ -152,27 +148,28 @@ export default {
       padding-top: 2px;
     }
   }
-  .activity-list-wrapper {
-    .text-wrapper {
-      .date-text {
-        font-size: 0.75rem;
-        opacity: 0.8;
-      }
-      p {
-        margin: 0;
-      }
-      .comment-input-wrapper {
-        display: inline-block;
-        background: #fff;
-        padding: 12px;
-        border-radius: 4px;
-        margin-bottom: 8px;
-      }
+  .comment-container {
+    max-width: calc(100% - 64px);
+  }
+  .text-wrapper {
+    .date-text {
+      font-size: 0.75rem;
+      opacity: 0.8;
     }
-    .activity-actions {
-      button {
-        text-decoration: underline;
-      }
+    p {
+      margin: 0;
+    }
+    .comment-input-wrapper {
+      display: inline-block;
+      background: #fff;
+      padding: 12px;
+      border-radius: 4px;
+      margin-bottom: 8px;
+    }
+  }
+  .activity-actions {
+    button {
+      text-decoration: underline;
     }
   }
 }

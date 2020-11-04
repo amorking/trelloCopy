@@ -1,5 +1,5 @@
 <template>
-  <div class="check-list-module">
+  <v-container class="check-list-module">
     <v-row class="check-list-header d-flex align-center justify-space-between">
       <v-icon class="ico">
         mdi-checkbox-multiple-marked-outline
@@ -61,7 +61,7 @@
         </v-btn>
       </div>
     </v-row>
-  </div>
+  </v-container>
 </template>
 
 <script>

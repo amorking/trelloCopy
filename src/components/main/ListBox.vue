@@ -1,6 +1,6 @@
 <template>
-  <v-col cols="12" md="6" lg="3">
-    <v-card class="list-box pt-2 px-2 pb-2" color="#ebecf0">
+  <v-col cols="12" md="6" lg="4" xl="2">
+    <v-card class="list-box pa-2" color="#ebecf0">
       <v-row class="box-header pl-2" align="center" no-gutters>
         <h4>{{ list.title }}</h4>
         <v-spacer></v-spacer>
