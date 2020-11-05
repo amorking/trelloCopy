@@ -148,6 +148,11 @@ export default {
       padding-top: 2px;
     }
   }
+  .activity-list-wrapper {
+    .comment-text-field {
+      max-width: calc(100% - 64px);
+    }
+  }
   .comment-container {
     max-width: calc(100% - 64px);
   }

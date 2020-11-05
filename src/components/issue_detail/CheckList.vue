@@ -17,7 +17,9 @@
       </div>
     </v-row>
     <v-row class="progress-wrapper align-center">
-      <span class="progress-percent ml-1">{{ progress }}%</span>
+      <span class="progress-percent ml-1"
+        >{{ progress ? progress : '0' }}%</span
+      >
       <v-progress-linear
         class="my-2 ml-10"
         height="10"
