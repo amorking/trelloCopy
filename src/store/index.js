@@ -10,14 +10,6 @@ export default new Vuex.Store({
         id: 0,
         title: 'todo',
       },
-      {
-        id: 1,
-        title: 'doing',
-      },
-      {
-        id: 2,
-        title: 'done',
-      },
     ],
     issues: [
       {
@@ -80,35 +72,6 @@ export default new Vuex.Store({
           },
         ],
       },
-      {
-        id: 2,
-        listId: 1, //lists의 id
-        title: 'test 3',
-        description: 'this is test 3',
-        dueDate: '2020-10-26',
-        checklist: [
-          { id: 0, title: 'layout', complete: true },
-          { id: 1, title: 'function', complete: false },
-        ],
-        activities: [
-          {
-            id: 0,
-            imgSrc:
-              'https://crhscountyline.com/wp-content/uploads/2020/03/Capture.png',
-            name: '닉녬',
-            text: '방가브다',
-            createdAt: '2020-10-27T08:09:34.435Z',
-          },
-          {
-            id: 1,
-            imgSrc:
-              'https://cloudfront-ap-northeast-1.images.arcpublishing.com/chosun/UVBJZL3RXAB36BDSHVM3MW2WNY.jpg',
-            name: 'yourNickname',
-            text: 'hi my name is you',
-            createdAt: '2020-10-27T08:05:34.435Z',
-          },
-        ],
-      },
     ],
     currentList: {},
     currentIssue: {},
@@ -132,6 +95,10 @@ export default new Vuex.Store({
       let target = state.issues.find((el) => el.id === payload.id);
       target.description = payload.description;
     },
+    changeListTitle(state, payload) {
+      let target = state.lists.find((el) => el.id === payload.id);
+      target.title = payload.title;
+    },
     editIssue(state, payload) {
       let target = state.issues.find((el) => el.id === payload.id);
       Object.assign(target, payload);
@@ -144,6 +111,9 @@ export default new Vuex.Store({
         (el) => el.id === payload.taskId
       );
       targetIssue.checklist.splice(target, 1);
+    },
+    addList(state, payload) {
+      state.lists.push(payload);
     },
     addIssue(state, payload) {
       state.issues.push(payload);

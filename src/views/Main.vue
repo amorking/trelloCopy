@@ -1,20 +1,21 @@
 <template>
   <div class="main">
     <v-container class="list-container overflow-x-auto" fluid>
-      <v-row class="flex-nowrap">
+      <v-row class="flex-nowrap pl-lg-2">
         <v-col
           v-for="(list, i) in lists"
           :key="i"
           cols="12"
           md="6"
-          lg="4"
+          lg="3"
           xl="2"
         >
           <v-card class="list-box pa-2" color="#ebecf0">
             <ListBox
               class="list-box-wrap"
-              :list="list"
+              :init-list="list"
               :issues="issues"
+              @change-list-title="changeListTitle"
             ></ListBox>
             <v-row class="btn-add-wrapper pa-1" no-gutters>
               <v-col v-if="addingIssue !== i" class="btn-add" cols="12">
@@ -44,7 +45,7 @@
                 ></v-text-field>
                 <div class="btn-wrapper d-flex">
                   <v-btn color="green" @click="addNewIssue(i)">save</v-btn>
-                  <v-btn icon @click="cancleIssue">
+                  <v-btn icon @click="cancelIssue">
                     <v-icon>
                       mdi-close
                     </v-icon>
@@ -56,7 +57,7 @@
           <!-- /.list-box -->
         </v-col>
 
-        <v-col cols="12" md="6" lg="4" xl="2">
+        <v-col cols="12" md="6" lg="3" xl="2">
           <v-btn
             class="btn-add-list"
             color="hsla(0,0%,100%,.2)"
@@ -78,8 +79,8 @@
               hide-details
             ></v-text-field>
             <div class="btn-wrapper d-flex">
-              <v-btn color="green">save</v-btn>
-              <v-btn icon @click="addingList = false">
+              <v-btn color="green" @click="addList">save</v-btn>
+              <v-btn icon @click="cancelList">
                 <v-icon>
                   mdi-close
                 </v-icon>
@@ -106,6 +107,13 @@ export default {
         }, 0) + 1
       );
     },
+    newListId() {
+      return (
+        this.lists.reduce((acc, cur) => {
+          return Math.max(acc, cur.id);
+        }, 0) + 1
+      );
+    },
   },
   data() {
     return {
@@ -120,7 +128,15 @@ export default {
   },
   methods: {
     addList() {
-      this.isEdit = !this.isEdit;
+      this.$store.commit('addList', {
+        id: this.newListId,
+        title: this.listTitle,
+      });
+      this.listTitle = '';
+    },
+    cancelList() {
+      this.listTitle = '';
+      this.addingList = false;
     },
     addNewIssue(index) {
       this.$store.commit('addIssue', {
@@ -134,9 +150,12 @@ export default {
       });
       this.issueTitle = '';
     },
-    cancleIssue() {
+    cancelIssue() {
       this.addingIssue = undefined;
       this.issueTitle = '';
+    },
+    changeListTitle(list) {
+      this.$store.commit('changeListTitle', list);
     },
   },
 };
